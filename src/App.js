@@ -1,14 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
+// import BlogList from './components/BlogList';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
+import { useDispatch } from 'react-redux';
+
+// import { initializeBlogs } from './reducers/blogReducer';
+import { setNotice } from './reducers/noticeReducer';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  // const blogs = useSelector((state) => {
+  //   return state.blogs;
+  // });
   const [user, setUser] = useState(null);
-  const [notice, setNotice] = useState(null);
+
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(initializeBlogs());
+  // }, []);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
@@ -30,13 +43,6 @@ const App = () => {
     setUser(userLoggingIn);
   };
 
-  const noticeContent = ( message, error=false ) => {
-    setNotice({ message, error });
-    setTimeout(() => {
-      setNotice(null);
-    }, 5000);
-  };
-
   const handleLogout = () => {
     window.localStorage.removeItem('loggedInUser');
     setUser(null);
@@ -44,7 +50,7 @@ const App = () => {
 
   const userLogout = () => {
     handleLogout();
-    noticeContent(`${user.name} logged out successfully`);
+    dispatch(setNotice(`${user.name} logged out successfully`, 5, 'success'));
   };
 
   const addBlog = async (newBlog) => {
@@ -68,24 +74,22 @@ const App = () => {
 
   return (
     <div>
+      <Notification />
       {user === null
         ? <>
           <h2>log in to application</h2>
-          <Notification notice={notice} />
           <LoginForm
-            notification={noticeContent}
             login={establishUser}
           />
         </>
         : <>
           <h2>blogs</h2>
-          <Notification notice={notice} />
           <p>{user.name} logged in <button onClick={userLogout}>logout</button></p>
           <BlogForm
-            notification={noticeContent}
             addBlog={addBlog}
             forceLogout={handleLogout}
           />
+          {/* <BlogList /> */}
           {blogs
             .sort((a, b) => b.likes - a.likes)
             .map((blog) =>
@@ -94,7 +98,6 @@ const App = () => {
                 blog={blog}
                 updates={updates}
                 user={user}
-                notification={noticeContent}
                 removeBlog={removeBlog}
                 logout={handleLogout}
               />)

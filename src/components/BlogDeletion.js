@@ -1,17 +1,20 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { setNotice } from '../reducers/noticeReducer';
 
-const BlogDeletion = ({ blog, notification, removeBlog, forceLogout }) => {
+const BlogDeletion = ({ blog, removeBlog, forceLogout }) => {
+  const dispatch = useDispatch();
   const deleteBlog = async () => {
     try {
       if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
         await removeBlog(blog.id);
-        notification(`Removed blog '${blog.title}' by ${blog.author}`);
+        dispatch(setNotice(`Removed blog '${blog.title}' by ${blog.author}`, 5, 'success'));
       }
     } catch (exception) {
       if (JSON.stringify(exception).includes('401')) {
         forceLogout();
-        notification('Session timed out: Log back in to complete operation', true);
+        dispatch(setNotice('Session timed out: Log back in to complete operation', 5, 'fail'));
       }
     }
   };
@@ -23,7 +26,6 @@ const BlogDeletion = ({ blog, notification, removeBlog, forceLogout }) => {
 
 BlogDeletion.propTypes = {
   blog: PropTypes.object.isRequired,
-  notification: PropTypes.func,
   removeBlog: PropTypes.func,
   forceLogout: PropTypes.func
 };

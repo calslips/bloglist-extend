@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import loginService from '../services/login';
+import { setNotice } from '../reducers/noticeReducer';
 import PropTypes from 'prop-types';
 
-const LoginForm = ({ notification, login }) => {
+const LoginForm = ({ login }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -17,9 +21,9 @@ const LoginForm = ({ notification, login }) => {
       );
 
       login(user);
-      notification(`${user.name} logged in successfully`);
+      dispatch(setNotice(`${user.name} logged in successfully`, 5, 'success'));
     } catch (exception) {
-      notification('Invalid username or password', true);
+      dispatch(setNotice('Invalid username or password', 5, 'fail'));
     }
   };
 
@@ -51,7 +55,6 @@ const LoginForm = ({ notification, login }) => {
 };
 
 LoginForm.propTypes = {
-  notification: PropTypes.func,
   login: PropTypes.func
 };
 

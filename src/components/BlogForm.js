@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { setNotice } from '../reducers/noticeReducer';
 
-const BlogForm = ({ notification, addBlog, forceLogout }) => {
+const BlogForm = ({ addBlog, forceLogout }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -9,6 +11,8 @@ const BlogForm = ({ notification, addBlog, forceLogout }) => {
 
   const hideWhenVisible = { display: createBlogFormVisible ? 'none' : '' };
   const showWhenVisible = { display: createBlogFormVisible ? '' : 'none' };
+
+  const dispatch = useDispatch();
 
   const createBlog = async (event) => {
     event.preventDefault();
@@ -21,7 +25,7 @@ const BlogForm = ({ notification, addBlog, forceLogout }) => {
       };
 
       await addBlog(blogObject);
-      notification(`A new blog '${blogObject.title}' by ${blogObject.author} added`);
+      dispatch(setNotice(`A new blog '${blogObject.title}' by ${blogObject.author} added`, 5, 'success'));
       setTitle('');
       setAuthor('');
       setUrl('');
@@ -29,9 +33,9 @@ const BlogForm = ({ notification, addBlog, forceLogout }) => {
     } catch (exception) {
       if (JSON.stringify(exception).includes('401')) {
         forceLogout();
-        notification('Session timed out: Log back in to complete operation', true);
+        dispatch(setNotice('Session timed out: Log back in to complete operation', 5, 'fail'));
       } else if (JSON.stringify(exception).includes('400')) {
-        notification('Title and url are required to add new blog', true);
+        dispatch(setNotice('Title and url are required to add new blog', 5, 'fail'));
       }
     }
   };
@@ -83,7 +87,6 @@ const BlogForm = ({ notification, addBlog, forceLogout }) => {
 };
 
 BlogForm.propTypes = {
-  notification: PropTypes.func,
   addBlog: PropTypes.func,
   forceLogout: PropTypes.func
 };

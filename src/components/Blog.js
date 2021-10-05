@@ -3,7 +3,7 @@ import Likes from './Likes';
 import BlogDeletion from './BlogDeletion';
 import PropTypes from 'prop-types';
 
-const Blog = ({ blog, updates, user, notification, removeBlog, logout }) => {
+const Blog = ({ blog, updates, user, removeBlog, logout }) => {
   const [showAllInfo, setShowAllInfo] = useState(false);
 
   const minBlogInfo = { display: showAllInfo ? 'none' : '' };
@@ -30,7 +30,6 @@ const Blog = ({ blog, updates, user, notification, removeBlog, logout }) => {
         {(user.name === blog.user.name)
           ? <BlogDeletion
             blog={blog}
-            notification={notification}
             removeBlog={removeBlog}
             forceLogout={logout}
           />
@@ -50,7 +49,6 @@ Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   updates: PropTypes.func,
   user: PropTypes.object.isRequired,
-  notification: PropTypes.func,
   removeBlog: PropTypes.func,
   logout: PropTypes.func
 };

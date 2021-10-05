@@ -1,15 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const Notification = ({ notice }) => {
+const Notification = ({ notice, category }) => {
   if (notice === null) {
     return null;
   }
 
-  let noticeStyle;
-
-  const success = {
-    color: 'green',
+  const style = {
+    color: category === 'success' ? 'green' : 'red',
     background: 'lightgrey',
     fontSize: 20,
     borderStyle: 'solid',
@@ -18,25 +17,26 @@ const Notification = ({ notice }) => {
     marginBottom: 10
   };
 
-  const error = {
-    color: 'red',
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  };
-
-  notice.error
-    ? noticeStyle = error
-    : noticeStyle = success;
-
-  return <div className='notice' style={noticeStyle}>{notice.message}</div>;
+  return (
+    <>
+      {notice &&
+        (<div className='notice' style={style}>{notice}</div>)}
+    </>
+  );
 };
 
 Notification.propTypes = {
-  notice: PropTypes.object
+  notice: PropTypes.string,
+  category: PropTypes.string
 };
 
-export default Notification;
+const mapStateToProps = (state) => {
+  const [notice, category] = state.notification;
+  return {
+    notice,
+    category
+  };
+};
+
+const ConnectedNotification = connect(mapStateToProps)(Notification);
+export default ConnectedNotification;

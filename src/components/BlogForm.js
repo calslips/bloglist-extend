@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setNotice } from '../reducers/noticeReducer';
+import { createBlog } from '../reducers/blogReducer';
 
-const BlogForm = ({ addBlog, forceLogout }) => {
+const BlogForm = ({ forceLogout }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -14,7 +15,7 @@ const BlogForm = ({ addBlog, forceLogout }) => {
 
   const dispatch = useDispatch();
 
-  const createBlog = async (event) => {
+  const addBlog = async (event) => {
     event.preventDefault();
 
     try {
@@ -24,7 +25,7 @@ const BlogForm = ({ addBlog, forceLogout }) => {
         url
       };
 
-      await addBlog(blogObject);
+      await dispatch(createBlog(blogObject));
       dispatch(setNotice(`A new blog '${blogObject.title}' by ${blogObject.author} added`, 5, 'success'));
       setTitle('');
       setAuthor('');
@@ -47,7 +48,7 @@ const BlogForm = ({ addBlog, forceLogout }) => {
       </div>
       <div style={showWhenVisible}>
         <h2>create new</h2>
-        <form onSubmit={createBlog}>
+        <form onSubmit={addBlog}>
           <div>
             title:
             <input
@@ -87,7 +88,6 @@ const BlogForm = ({ addBlog, forceLogout }) => {
 };
 
 BlogForm.propTypes = {
-  addBlog: PropTypes.func,
   forceLogout: PropTypes.func
 };
 

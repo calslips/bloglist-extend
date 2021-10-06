@@ -2,13 +2,15 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setNotice } from '../reducers/noticeReducer';
+import { deleteBlog } from '../reducers/blogReducer';
 
-const BlogDeletion = ({ blog, removeBlog, forceLogout }) => {
+const BlogDeletion = ({ blog, forceLogout }) => {
   const dispatch = useDispatch();
-  const deleteBlog = async () => {
+
+  const removeBlog = async () => {
     try {
       if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
-        await removeBlog(blog.id);
+        await dispatch(deleteBlog(blog.id));
         dispatch(setNotice(`Removed blog '${blog.title}' by ${blog.author}`, 5, 'success'));
       }
     } catch (exception) {
@@ -20,13 +22,12 @@ const BlogDeletion = ({ blog, removeBlog, forceLogout }) => {
   };
 
   return (
-    <button onClick={deleteBlog}>remove</button>
+    <button onClick={removeBlog}>remove</button>
   );
 };
 
 BlogDeletion.propTypes = {
   blog: PropTypes.object.isRequired,
-  removeBlog: PropTypes.func,
   forceLogout: PropTypes.func
 };
 

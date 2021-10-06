@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import BlogList from './components/BlogList';
+import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { initializeBlogs } from './reducers/blogReducer';
 import { setNotice } from './reducers/noticeReducer';
 
 const App = () => {
   const [user, setUser] = useState(null);
+
+  const blogs = useSelector((state) => state.blogs);
 
   const dispatch = useDispatch();
 
@@ -41,20 +43,6 @@ const App = () => {
     dispatch(setNotice(`${user.name} logged out successfully`, 5, 'success'));
   };
 
-  // const updates = async (blogId, updateObject) => {
-  //   await blogService.update(blogId, updateObject);
-  //   const blogToUpdate = blogs.find((blog) => blog.id === blogId);
-  //   setBlogs(blogs.map((blog) => blog.id === blogId
-  //     ? { ...blogToUpdate, ...updateObject }
-  //     : blog
-  //   ));
-  // };
-
-  // const removeBlog = async (blogId) => {
-  //   await blogService.remove(blogId);
-  //   setBlogs(blogs.filter((blog) => blog.id !== blogId));
-  // };
-
   return (
     <div>
       <Notification />
@@ -71,7 +59,17 @@ const App = () => {
           <BlogForm
             forceLogout={handleLogout}
           />
-          <BlogList />
+          <div>
+            {blogs
+              .sort((a, b) => b.likes - a.likes)
+              .map((blog) =>
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  user={user}
+                />
+              )}
+          </div>
         </>
       }
     </div>

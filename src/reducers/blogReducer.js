@@ -20,12 +20,44 @@ export const createBlog = (newBlog) => {
   };
 };
 
+export const updateBlogLikes = (blogId, userInfo, updateObject) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogService.update(blogId, updateObject);
+    dispatch({
+      type: 'TOGGLE_LIKES',
+      data: { ...updatedBlog, user: userInfo }
+    });
+  };
+};
+
+export const deleteBlog = (blogId) => {
+  return async (dispatch) => {
+    await blogService.remove(blogId);
+    dispatch({
+      type: 'DELETE_BLOG',
+      data: blogId
+    });
+  };
+};
+
 const blogReducer = (state = [], action) => {
   switch(action.type) {
   case 'INIT_BLOGS':
     return action.data;
   case 'CREATE_BLOG':
     return [...state, action.data];
+  case 'TOGGLE_LIKES': {
+    const toggleLike = action.data;
+    return state.map(
+      (b) => b.id === toggleLike.id ? toggleLike : b
+    );
+  }
+  case 'DELETE_BLOG': {
+    const deletedId = action.data;
+    return state.filter(
+      (b) => b.id !== deletedId
+    );
+  }
   default:
     return state;
   }

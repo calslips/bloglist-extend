@@ -3,7 +3,7 @@ import Likes from './Likes';
 import BlogDeletion from './BlogDeletion';
 import PropTypes from 'prop-types';
 
-const Blog = ({ blog, updates, user, removeBlog, logout }) => {
+const Blog = ({ blog, user, logout }) => {
   const [showAllInfo, setShowAllInfo] = useState(false);
 
   const minBlogInfo = { display: showAllInfo ? 'none' : '' };
@@ -25,16 +25,14 @@ const Blog = ({ blog, updates, user, removeBlog, logout }) => {
           <button onClick={() => setShowAllInfo(false)}>hide</button>
         </p>
         <p>{blog.url}</p>
-        <Likes blog={blog} updates={updates} />
+        <Likes blog={blog} />
         <p>{blog.user.name}</p>
-        {(user.name === blog.user.name)
-          ? <BlogDeletion
+        {(user.name === blog.user.name &&
+          <BlogDeletion
             blog={blog}
-            removeBlog={removeBlog}
             forceLogout={logout}
           />
-          : <></>
-        }
+        )}
       </div>
       <div className='lessInfo' style={minBlogInfo}>
         <p>{blog.title} - {blog.author}
@@ -47,9 +45,7 @@ const Blog = ({ blog, updates, user, removeBlog, logout }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  updates: PropTypes.func,
   user: PropTypes.object.isRequired,
-  removeBlog: PropTypes.func,
   logout: PropTypes.func
 };
 

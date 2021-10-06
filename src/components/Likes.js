@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateBlogLikes } from '../reducers/blogReducer';
 import PropTypes from 'prop-types';
 
-const Likes = ({ blog, updates }) => {
-  const [likes, setLikes] = useState(blog.likes);
+const Likes = ( { blog }) => {
   const [alreadyLiked, setAlreadyLiked] = useState(false);
 
-  const likeBlog = async (likeStatus) => {
+  const dispatch = useDispatch();
+
+  const handleLike = (likeStatus) => {
     if (likeStatus) {
       const updateLikes = {
-        likes: likes + 1
+        likes: blog.likes + 1
       };
-      updates(blog.id, updateLikes);
-      setLikes(updateLikes.likes);
+      dispatch(updateBlogLikes(blog.id, blog.user, updateLikes));
       setAlreadyLiked(likeStatus);
     } else {
       const updateLikes = {
-        likes: likes - 1
+        likes: blog.likes - 1
       };
-      updates(blog.id, updateLikes);
-      setLikes(updateLikes.likes);
+      dispatch(updateBlogLikes(blog.id, blog.user, updateLikes));
       setAlreadyLiked(likeStatus);
     }
   };
@@ -27,10 +28,10 @@ const Likes = ({ blog, updates }) => {
     <>
       {alreadyLiked
         ? <p className='likes'>
-          likes {likes} <button onClick={() => {likeBlog(false);}}>unlike</button>
+          likes {blog.likes} <button onClick={() => {handleLike(false);}}>unlike</button>
         </p>
         : <p className='likes'>
-          likes {likes} <button onClick={() => {likeBlog(true);}}>like</button>
+          likes {blog.likes} <button onClick={() => {handleLike(true);}}>like</button>
         </p>
       }
     </>
@@ -39,7 +40,6 @@ const Likes = ({ blog, updates }) => {
 
 Likes.propTypes = {
   blog: PropTypes.object.isRequired,
-  updates: PropTypes.func
 };
 
 export default Likes;

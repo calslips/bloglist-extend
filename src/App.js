@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
-import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeBlogs } from './reducers/blogReducer';
 import { setNotice } from './reducers/noticeReducer';
+import { login, maintainLogin, logout } from './reducers/loginReducer';
+import store from './store';
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
+  let user = useSelector((state) => state.user);
   const blogs = useSelector((state) => state.blogs);
 
   const dispatch = useDispatch();
@@ -23,19 +26,36 @@ const App = () => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser');
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON);
-      setUser(user);
+      dispatch(maintainLogin(user));
       blogService.setToken(user.token);
     }
   }, []);
 
-  const establishUser = async (userLoggingIn) => {
-    blogService.setToken(userLoggingIn.token);
-    setUser(userLoggingIn);
+  const setupUser = async () => {
+    return store.getState().user;
+  };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    try {
+      await dispatch(login({ username, password }));
+
+      user = await setupUser();
+
+      blogService.setToken(user.token);
+      localStorage.setItem(
+        'loggedInUser', JSON.stringify(user)
+      );
+      dispatch(setNotice(`${user.name} logged in successfully`, 5, 'success'));
+    } catch (exception) {
+      dispatch(setNotice('Invalid username or password', 5, 'fail'));
+    }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedInUser');
-    setUser(null);
+    dispatch(logout());
   };
 
   const userLogout = () => {
@@ -49,9 +69,29 @@ const App = () => {
       {user === null
         ? <>
           <h2>log in to application</h2>
-          <LoginForm
-            login={establishUser}
-          />
+          <form onSubmit={handleLogin}>
+            <div>
+              username
+              <input
+                id='username'
+                type='text'
+                value={username}
+                name='Username'
+                onChange={({ target }) => setUsername(target.value)}
+              />
+            </div>
+            <div>
+              password
+              <input
+                id='password'
+                type='password'
+                value={password}
+                name='Password'
+                onChange={({ target }) => setPassword(target.value)}
+              />
+            </div>
+            <button type='submit'>login</button>
+          </form>
         </>
         : <>
           <h2>blogs</h2>

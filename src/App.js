@@ -7,7 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initializeBlogs } from './reducers/blogReducer';
 import { setNotice } from './reducers/noticeReducer';
 import { login, maintainLogin, logout } from './reducers/loginReducer';
+import { retrieveUsers } from './reducers/usersReducer';
 import store from './store';
+import { Route, Switch } from 'react-router-dom';
+import Users from './components/Users';
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -20,6 +23,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs());
+    dispatch(retrieveUsers());
   }, []);
 
   useEffect(() => {
@@ -96,20 +100,27 @@ const App = () => {
         : <>
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={userLogout}>logout</button></p>
-          <BlogForm
-            forceLogout={handleLogout}
-          />
-          <div>
-            {blogs
-              .sort((a, b) => b.likes - a.likes)
-              .map((blog) =>
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  user={user}
-                />
-              )}
-          </div>
+          <Switch>
+            <Route exact path='/'>
+              <BlogForm
+                forceLogout={handleLogout}
+              />
+              <div>
+                {blogs
+                  .sort((a, b) => b.likes - a.likes)
+                  .map((blog) =>
+                    <Blog
+                      key={blog.id}
+                      blog={blog}
+                      user={user}
+                    />
+                  )}
+              </div>
+            </Route>
+            <Route path='/users'>
+              <Users />
+            </Route>
+          </Switch>
         </>
       }
     </div>

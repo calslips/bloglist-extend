@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { updateBlogLikes } from '../reducers/blogReducer';
 import PropTypes from 'prop-types';
 
-const Likes = ( { blog }) => {
+const Likes = ({ blog }) => {
   const [alreadyLiked, setAlreadyLiked] = useState(false);
 
   const dispatch = useDispatch();
@@ -28,10 +28,10 @@ const Likes = ( { blog }) => {
     <>
       {alreadyLiked
         ? <p className='likes'>
-          likes {blog.likes} <button onClick={() => {handleLike(false);}}>unlike</button>
+          {blog.likes} likes <button onClick={() => {handleLike(false);}}>unlike</button>
         </p>
         : <p className='likes'>
-          likes {blog.likes} <button onClick={() => {handleLike(true);}}>like</button>
+          {blog.likes} likes <button onClick={() => {handleLike(true);}}>like</button>
         </p>
       }
     </>

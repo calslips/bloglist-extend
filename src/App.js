@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
+import BlogView from './components/BlogView';
 import Notification from './components/Notification';
+import Users from './components/Users';
+import User from './components/User';
 import blogService from './services/blogs';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeBlogs } from './reducers/blogReducer';
@@ -10,8 +13,6 @@ import { login, maintainLogin, logout } from './reducers/loginReducer';
 import { retrieveUsers } from './reducers/usersReducer';
 import store from './store';
 import { Route, Switch } from 'react-router-dom';
-import Users from './components/Users';
-import User from './components/User';
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -113,7 +114,6 @@ const App = () => {
                     <Blog
                       key={blog.id}
                       blog={blog}
-                      user={user}
                     />
                   )}
               </div>
@@ -123,6 +123,9 @@ const App = () => {
             </Route>
             <Route path='/users'>
               <Users />
+            </Route>
+            <Route path='/blogs/:id'>
+              <BlogView forceLogout={handleLogout} />
             </Route>
           </Switch>
         </>

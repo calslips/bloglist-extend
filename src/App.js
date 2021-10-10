@@ -11,6 +11,7 @@ import { retrieveUsers } from './reducers/usersReducer';
 import store from './store';
 import { Route, Switch } from 'react-router-dom';
 import Users from './components/Users';
+import User from './components/User';
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -116,6 +117,9 @@ const App = () => {
                     />
                   )}
               </div>
+            </Route>
+            <Route path='/users/:id'>
+              <User />
             </Route>
             <Route path='/users'>
               <Users />

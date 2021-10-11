@@ -1,8 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { connect, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { retrieveUsers } from '../reducers/usersReducer';
 
 const Users = ({ users }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(retrieveUsers());
+  }, []);
 
   if (users === null) {
     return null;

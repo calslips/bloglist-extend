@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Navigation from './components/Navigation';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import BlogView from './components/BlogView';
@@ -71,9 +72,9 @@ const App = () => {
 
   return (
     <div>
-      <Notification />
       {user === null
         ? <>
+          <Notification />
           <h2>log in to application</h2>
           <form onSubmit={handleLogin}>
             <div>
@@ -100,8 +101,9 @@ const App = () => {
           </form>
         </>
         : <>
-          <h2>blogs</h2>
-          <p>{user.name} logged in <button onClick={userLogout}>logout</button></p>
+          <Navigation logout={userLogout} />
+          <Notification />
+          <h2>blog app</h2>
           <Switch>
             <Route exact path='/'>
               <BlogForm

@@ -20,6 +20,16 @@ export const createBlog = (newBlog) => {
   };
 };
 
+export const createComment = (id, comment, userInfo) => {
+  return async (dispatch) => {
+    const addedComment = await blogService.createComment(id, comment);
+    dispatch({
+      type: 'ADD_COMMENT',
+      data: { ...addedComment, user: userInfo }
+    });
+  };
+};
+
 export const updateBlogLikes = (blogId, userInfo, updateObject) => {
   return async (dispatch) => {
     const updatedBlog = await blogService.update(blogId, updateObject);
@@ -46,6 +56,12 @@ const blogReducer = (state = [], action) => {
     return action.data;
   case 'CREATE_BLOG':
     return [...state, action.data];
+  case 'ADD_COMMENT': {
+    const commentedBlog = action.data;
+    return state.map(
+      (b) => b.id === commentedBlog.id ? commentedBlog : b
+    );
+  }
   case 'TOGGLE_LIKES': {
     const toggleLike = action.data;
     return state.map(

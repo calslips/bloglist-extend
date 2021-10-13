@@ -5,6 +5,10 @@ import Likes from './Likes';
 import BlogDeletion from './BlogDeletion';
 import { createComment } from '../reducers/blogReducer';
 import { setNotice } from '../reducers/noticeReducer';
+import {
+  TextField,
+  Button
+} from '@mui/material';
 
 const BlogView = ({ forceLogout }) => {
   const [comment, setComment] = useState('');
@@ -26,7 +30,7 @@ const BlogView = ({ forceLogout }) => {
       await dispatch(createComment(id, { comment }, blog.user));
       setComment('');
     } catch (exception) {
-      dispatch(setNotice('Comments need content', 5, 'fail'));
+      dispatch(setNotice('Comments need content', 5, 'error'));
     }
   };
 
@@ -44,13 +48,16 @@ const BlogView = ({ forceLogout }) => {
       )}
       <h3>comments</h3>
       <form onSubmit={addComment}>
-        <input
+        <TextField
+          size='small'
           id='comment'
-          value={comment}
-          name='Comment'
+          label='comment'
           onChange={({ target }) => setComment(target.value)}
         />
-        <button>add comment</button>
+        <br />
+        <Button size='small' variant='contained' type='submit'>
+          add comment
+        </Button>
       </form>
       <ul>
         {blog.comments.map((comment, i) =>

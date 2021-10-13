@@ -3,6 +3,10 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setNotice } from '../reducers/noticeReducer';
 import { createBlog } from '../reducers/blogReducer';
+import {
+  Button,
+  TextField
+} from '@mui/material';
 
 const BlogForm = ({ forceLogout }) => {
   const [title, setTitle] = useState('');
@@ -34,9 +38,9 @@ const BlogForm = ({ forceLogout }) => {
     } catch (exception) {
       if (JSON.stringify(exception).includes('401')) {
         forceLogout();
-        dispatch(setNotice('Session timed out: Log back in to complete operation', 5, 'fail'));
+        dispatch(setNotice('Session timed out: Log back in to complete operation', 5, 'error'));
       } else if (JSON.stringify(exception).includes('400')) {
-        dispatch(setNotice('Title and url are required to add new blog', 5, 'fail'));
+        dispatch(setNotice('Title and url are required to add new blog', 5, 'error'));
       }
     }
   };
@@ -44,44 +48,44 @@ const BlogForm = ({ forceLogout }) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={() => setCreateBlogFormVisible(true)}>create new blog</button>
+        <Button variant='contained' size='small' onClick={() => setCreateBlogFormVisible(true)}>
+          create new blog
+        </Button>
       </div>
       <div style={showWhenVisible}>
         <h2>create new</h2>
         <form onSubmit={addBlog}>
           <div>
-            title:
-            <input
+            <TextField
+              size='small'
               id='title'
-              type='text'
-              value={title}
-              name='Title'
+              label='title'
               onChange={({ target }) => setTitle(target.value)}
             />
           </div>
           <div>
-            author:
-            <input
+            <TextField
+              size='small'
               id='author'
-              type='text'
-              value={author}
-              name='Author'
+              label='author'
               onChange={({ target }) => setAuthor(target.value)}
             />
           </div>
           <div>
-            url:
-            <input
+            <TextField
+              size='small'
               id='url'
-              type='text'
-              value={url}
-              name='Url'
+              label='url'
               onChange={({ target }) => setUrl(target.value)}
             />
           </div>
-          <button type='submit'>create</button>
+          <Button variant='contained' size='small' type='submit'>
+            create
+          </Button>
         </form>
-        <button onClick={() => setCreateBlogFormVisible(false)}>cancel</button>
+        <Button variant='outlined' size='small' onClick={() => setCreateBlogFormVisible(false)}>
+          cancel
+        </Button>
       </div>
     </div>
   );

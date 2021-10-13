@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { setNotice } from '../reducers/noticeReducer';
 import { deleteBlog } from '../reducers/blogReducer';
+import { Button } from '@mui/material';
 
 const BlogDeletion = ({ blog, forceLogout }) => {
   const dispatch = useDispatch();
@@ -19,13 +20,15 @@ const BlogDeletion = ({ blog, forceLogout }) => {
     } catch (exception) {
       if (JSON.stringify(exception).includes('401')) {
         forceLogout();
-        dispatch(setNotice('Session timed out: Log back in to complete operation', 5, 'fail'));
+        dispatch(setNotice('Session timed out: Log back in to complete operation', 5, 'error'));
       }
     }
   };
 
   return (
-    <button onClick={removeBlog}>remove</button>
+    <Button variant='outlined' size='small' onClick={removeBlog}>
+      remove
+    </Button>
   );
 };
 

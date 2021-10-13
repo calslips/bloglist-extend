@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateBlogLikes } from '../reducers/blogReducer';
 import PropTypes from 'prop-types';
+import { Button } from '@mui/material';
 
 const Likes = ({ blog }) => {
   const [alreadyLiked, setAlreadyLiked] = useState(false);
@@ -28,10 +29,16 @@ const Likes = ({ blog }) => {
     <>
       {alreadyLiked
         ? <p className='likes'>
-          {blog.likes} likes <button onClick={() => {handleLike(false);}}>unlike</button>
+          {blog.likes} likes&nbsp;
+          <Button size='small' variant='outlined' onClick={() => {handleLike(false);}}>
+            unlike
+          </Button>
         </p>
         : <p className='likes'>
-          {blog.likes} likes <button onClick={() => {handleLike(true);}}>like</button>
+          {blog.likes} likes&nbsp;
+          <Button size='small' variant='contained' onClick={() => {handleLike(true);}}>
+            like
+          </Button>
         </p>
       }
     </>

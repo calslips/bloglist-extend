@@ -1,12 +1,12 @@
 let timeoutID;
 
-export const setNotice = (noticeContent, duration, category) => {
+export const setNotice = (noticeContent, duration, severity) => {
   clearTimeout(timeoutID);
   return (dispatch) => {
     dispatch({
       type: 'POST_NOTICE',
       notification: noticeContent,
-      category
+      severity
     });
     timeoutID = setTimeout(() => {
       dispatch(clearNotice());
@@ -24,7 +24,7 @@ const clearNotice = () => {
 const noticeReducer = (state = [], action) => {
   switch (action.type) {
   case 'POST_NOTICE':
-    return [action.notification, action.category];
+    return [action.notification, action.severity];
   case 'CLEAR_NOTICE':
     return [];
   default:

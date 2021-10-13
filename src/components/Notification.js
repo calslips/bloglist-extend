@@ -1,40 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Alert } from '@mui/material';
 
-const Notification = ({ notice, category }) => {
+const Notification = ({ notice, severity }) => {
   if (notice === null) {
     return null;
   }
 
-  const style = {
-    color: category === 'success' ? 'green' : 'red',
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10
-  };
-
   return (
     <>
       {notice &&
-        (<div className='notice' style={style}>{notice}</div>)}
+        <Alert severity={severity}>{notice}</Alert>
+      }
     </>
   );
 };
 
 Notification.propTypes = {
   notice: PropTypes.string,
-  category: PropTypes.string
+  severity: PropTypes.string
 };
 
 const mapStateToProps = (state) => {
-  const [notice, category] = state.notification;
+  const [notice, severity] = state.notification;
   return {
     notice,
-    category
+    severity
   };
 };
 

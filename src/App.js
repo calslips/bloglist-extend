@@ -14,6 +14,11 @@ import { login, maintainLogin, logout } from './reducers/loginReducer';
 import { retrieveUsers } from './reducers/usersReducer';
 import store from './store';
 import { Route, Switch } from 'react-router-dom';
+import {
+  TextField,
+  Button,
+  Box
+} from '@mui/material';
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -56,7 +61,7 @@ const App = () => {
       );
       dispatch(setNotice(`${user.name} logged in successfully`, 5, 'success'));
     } catch (exception) {
-      dispatch(setNotice('Invalid username or password', 5, 'fail'));
+      dispatch(setNotice('Invalid username or password', 5, 'error'));
     }
   };
 
@@ -71,33 +76,32 @@ const App = () => {
   };
 
   return (
-    <div>
+    <Box sx={{ backgroundColor: 'floralWhite' }}>
       {user === null
         ? <>
           <Notification />
-          <h2>log in to application</h2>
+          <h2>log in to blog app</h2>
           <form onSubmit={handleLogin}>
             <div>
-              username
-              <input
+              <TextField
+                size='small'
                 id='username'
-                type='text'
-                value={username}
-                name='Username'
+                label='username'
                 onChange={({ target }) => setUsername(target.value)}
               />
             </div>
             <div>
-              password
-              <input
+              <TextField
+                size='small'
                 id='password'
+                label='password'
                 type='password'
-                value={password}
-                name='Password'
                 onChange={({ target }) => setPassword(target.value)}
               />
             </div>
-            <button type='submit'>login</button>
+            <Button size='small' variant='contained' type='submit'>
+              login
+            </Button>
           </form>
         </>
         : <>
@@ -132,7 +136,7 @@ const App = () => {
           </Switch>
         </>
       }
-    </div>
+    </Box>
   );
 };
 
